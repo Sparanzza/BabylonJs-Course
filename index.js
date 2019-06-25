@@ -15,6 +15,37 @@ var createScene = function () {
             // Add and manipulate meshes in the scene
             var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter:3}, scene);
             sphere.position.y = 1.5;
+
+                // Animation keys
+                var keys = [];
+                //At the animation key 0, the value of scaling is "1"
+                keys.push({
+                    frame: 0,
+                    value: 1
+                });
+
+                //At the animation key 20, the value of scaling is "0.2"
+                keys.push({
+                    frame: 20,
+                    value: 0.2
+                });
+
+                //At the animation key 100, the value of scaling is "1"
+                keys.push({
+                    frame: 100,
+                    value: 1
+                });
+            var animationsphere = new BABYLON.Animation("tutoAnimation", "scaling.x", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT,
+                                    BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+            
+            //Adding keys to the animation object
+            animationsphere.setKeys(keys);
+            //Then add the animation object to box1
+            sphere.animations.push(animationsphere);
+                //Finally, launch animations on box1, from key 0 to key 100 with loop activated
+            scene.beginAnimation(sphere, 0, 100, true);
+
+            console.log(sphere.BACKSIDE);
             var ground = BABYLON.MeshBuilder.CreateGround("ground", {width:50, height:50}, scene);
 
             return scene;
