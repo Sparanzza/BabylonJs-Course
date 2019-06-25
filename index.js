@@ -7,7 +7,7 @@ var createScene = function () {
             // Create the scene space
             var scene = new BABYLON.Scene(engine);
             // Add a camera to the scene and attach it to the canvas
-            var camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 2, 15 * Math.PI / 32, 25, BABYLON.Vector3.Zero(), scene);
+            var camera = new BABYLON.ArcRotateCamera("Camera", BABYLON.Tools.ToRadians(0), BABYLON.Tools.ToRadians(0), 25, BABYLON.Vector3.Zero(), scene);
             camera.attachControl(canvas, true);
             // Add lights to the scene
             var light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(2, 2, 0), scene);
@@ -42,9 +42,17 @@ var createScene = function () {
             animationsphere.setKeys(keys);
             //Then add the animation object to box1
             sphere.animations.push(animationsphere);
-                //Finally, launch animations on box1, from key 0 to key 100 with loop activated
+            //Finally, launch animations on box1, from key 0 to key 100 with loop activated
             scene.beginAnimation(sphere, 0, 100, true);
 
+            setInterval(function () {
+                //The color is defined at run time with random()
+                sphere.material.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
+            }, 1000);
+
+            var materialSphere = new BABYLON.StandardMaterial("texture1", scene);
+            materialSphere.diffuseColor = new BABYLON.Color3(0, 1, 0);//Green
+            sphere.material = materialSphere;
             console.log(sphere.BACKSIDE);
             var ground = BABYLON.MeshBuilder.CreateGround("ground", {width:50, height:50}, scene);
 
