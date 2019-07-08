@@ -92,8 +92,10 @@ var createScene = function () {
             for (let index = 0; index < numberOfBox; index++) {
                 box = BABYLON.MeshBuilder.CreateBox("box", {height: 1, width: 0.75, depth: 0.25}, scene);
                 box.position.z = index;
-                box.rotation.z = Math.PI / index;
-                box.rotation.y = Math.PI / index;    
+                yaw =    .25 * Math.PI;
+                pitch =  .75 * Math.PI;
+                roll =   .5 * Math.PI; 
+                box.rotationQuaternion =  BABYLON.Quaternion.RotationYawPitchRoll(yaw, pitch, roll);
             }
             // cube.setPosition( new BABYLON.Vector3(2,2,2));
             // var plane = BABYLON.MeshBuilder.CreatePlane("plane", { size :4}, scene);
