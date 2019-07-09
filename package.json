@@ -1,0 +1,33 @@
+{
+  "name": "course-babylon-github",
+  "version": "1.0.0",
+  "description": "Course Babylon js 101",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "start:dev": "webpack-dev-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sparanzza/Course-Babylon-github.git"
+  },
+  "author": "Aurelio Muñoz Hijano",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sparanzza/Course-Babylon-github/issues"
+  },
+  "homepage": "https://github.com/Sparanzza/Course-Babylon-github#readme",
+  "dependencies": {
+    "babylonjs": "^4.0.3",
+    "babylonjs-gui": "^4.0.3",
+    "babylonjs-loaders": "^4.0.3",
+    "babylonjs-materials": "^4.0.3"
+  },
+  "devDependencies": {
+    "ts-loader": "^6.0.4",
+    "typescript": "^3.5.3",
+    "webpack": "^4.35.3",
+    "webpack-cli": "^3.3.5",
+    "webpack-dev-server": "^3.7.2"
+  }
+}
