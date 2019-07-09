@@ -2,7 +2,8 @@
     "compilerOptions": {
         "types": [
             "babylonjs",
-            "babylonjs-gui"
+            "babylonjs-gui",
+            "babylonjs-materials"
         ],
         "target": "es5",
         "module": "commonjs",
@@ -22,6 +23,6 @@
         "outDir": "./"
     },
     "files": [
-        "./index.ts"
+        "./src/index.ts"
     ]
 }
