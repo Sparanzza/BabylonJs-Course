@@ -1,26 +1,12 @@
-import { Engine, Scene, ArcRotateCamera, HemisphericLight, Vector3, MeshBuilder, Mesh } from "babylonjs";
-import {addLabelToMesh} from "./gui";
-var canvas: any = document.getElementById("renderCanvas");
-var engine: Engine = new Engine(canvas, true);
+import { Game } from "./game";
 
-function createScene(): Scene {
+window.addEventListener("DOMContentLoaded", () => {
+    // Create the game using the 'renderCanvas'.
+    let game = new Game("renderCanvas");
 
-    let scene: Scene = new Scene(engine);
-    //Camera
-    let camera: ArcRotateCamera = new ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2, 2, Vector3.Zero(), scene);
-    camera.attachControl(canvas, true);
+    // Create the scene.
+    game.createScene();
 
-    var light1: HemisphericLight = new HemisphericLight("light1", new Vector3(1, 1, 0), scene);
-
-    var sphere: Mesh = MeshBuilder.CreateSphere("sphere", { diameter: 1 }, scene);
-
-    addLabelToMesh(sphere);
-    
-    return scene;
-}
-
-var scene: Scene = createScene();
-
-engine.runRenderLoop(() => {
-    scene.render();
+    // Start render loop.
+    game.doRender();
 });

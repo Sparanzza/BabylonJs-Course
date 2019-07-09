@@ -1,18 +1,15 @@
-import {AbstractMesh} from "babylonjs";
-import {AdvancedDynamicTexture,
-        Rectangle,
-        Control,
-        TextBlock} from "babylonjs-gui";
+import { AbstractMesh } from "babylonjs";
+import { AdvancedDynamicTexture, Rectangle, Control, TextBlock } from "babylonjs-gui";
 
 let advancedTexture: AdvancedDynamicTexture;
 
-function init(): void{
-    if (!advancedTexture){
+function init(): void {
+    if (!advancedTexture) {
         advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("uil");
     }
 }
 
-export function addLabelToMesh(mesh: AbstractMesh):void{
+export function addLabelToMesh(mesh: AbstractMesh): void {
     if (!advancedTexture) {
         init();
     }
