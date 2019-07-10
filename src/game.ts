@@ -84,7 +84,7 @@ export class Game {
         roulette.material = rouletteMaterial;
         console.log(rouletteTexture.toString());
 
-        let rouletteAnim = new BABYLON.Animation("rouletteRotate", "rotation.y", 20, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+        let rouletteAnim = new BABYLON.Animation("rouletteRotate", "rotation.y", 20, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONTYPE_FLOAT);
         var keyFrames = [];
 
         keyFrames.push({
@@ -101,6 +101,15 @@ export class Game {
         this._scene.beginDirectAnimation(roulette, [rouletteAnim], 0, 2000, true);
 
         let _globalAxis = new GlobalAxis(100, this._scene);
+
+        //When pointer down event is raised
+        this._scene.onPointerDown = function(evt, pickResult) {
+            // if the click hits the ground object, we change the impact position
+            // this._scene.beginDirectAnimation(roulette, [rouletteAnim], 0, 2000, false);
+            console.log(evt);
+            console.log(pickResult);
+            this.beginDirectAnimation(roulette, [rouletteAnim], 0, 2000, false);
+        };
     }
 
     doRender(): void {
