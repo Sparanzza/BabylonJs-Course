@@ -42,6 +42,7 @@ export class Game {
         // How much of the Yawing (turning) will affect the Rolling (banked-turn.)
         // Less than 1 will reduce the Rolling, and more than 1 will increase it.
         // this._camera.bankedTurnMultiplier = 1;
+
         this._camera.attachControl(this._canvas, false, false);
 
         // Create a basic light, aiming 0,1,0 - meaning, to the sky.
@@ -49,12 +50,6 @@ export class Game {
         this._light.intensity = 0.35;
         this._directionalLight = new BABYLON.DirectionalLight("DirectionalLight", new BABYLON.Vector3(0, -1, 0), this._scene);
         this._directionalLight.intensity = 0.35;
-
-        this._spotLight = new BABYLON.SpotLight("spotLight", new BABYLON.Vector3(0, 500, -10), new BABYLON.Vector3(0, -1, 0), Math.PI / 3, 100, this._scene);
-        this._spotLight.intensity = 1;
-        this._spotLight.diffuse = new BABYLON.Color3(1, 1, 0);
-        this._spotLight.specular = new BABYLON.Color3(1, 1, 0);
-        this._spotLight.range = 10;
 
         // Golden Material
         let goldenMaterial = new BABYLON.StandardMaterial("golden", this._scene);
@@ -65,17 +60,45 @@ export class Game {
         // velvet texture
         let velvetMaterial = new BABYLON.StandardMaterial("myMaterial", this._scene);
         let velvet = new BABYLON.Texture("images/velvet.jpg", this._scene);
+        let velvetSpecular = new BABYLON.Texture("images/velvet_specular.png", this._scene);
         velvet.uScale = velvet.vScale = 30;
+        velvetSpecular.uScale = velvetSpecular.vScale = 30;
         velvetMaterial.diffuseTexture = velvet;
-        velvetMaterial.specularTexture = velvet;
+        velvetMaterial.specularTexture = velvetSpecular;
+        velvetMaterial.diffuseColor = new BABYLON.Color3(1, 1, 1);
+        velvetMaterial.specularColor = new BABYLON.Color3(1, 1, 1);
 
         let cylinder = BABYLON.MeshBuilder.CreateCylinder("cylinder", { tessellation: 120, height: 10, diameter: 600 }, this._scene);
-        let ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 1920, height: 1080, subdivisions: 2 }, this._scene);
-
         cylinder.position.y = 5.0;
         cylinder.material = goldenMaterial;
-
+        let ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 1920, height: 1080, subdivisions: 2 }, this._scene);
         ground.material = velvetMaterial;
+
+        let roulette = BABYLON.MeshBuilder.CreateCylinder("roulette", { tessellation: 120, height: 20, diameter: 550 }, this._scene);
+        roulette.position.y = 5.0;
+        let rouletteMaterial = new BABYLON.StandardMaterial("roulette", this._scene);
+        let rouletteTexture = new BABYLON.Texture("images/roulette.png", this._scene);
+        rouletteTexture.uScale = rouletteTexture.vScale = 0.5;
+        rouletteTexture.uOffset = rouletteTexture.vOffset = 0.25;
+        rouletteMaterial.diffuseTexture = rouletteTexture;
+        roulette.material = rouletteMaterial;
+        console.log(rouletteTexture.toString());
+
+        let rouletteAnim = new BABYLON.Animation("rouletteRotate", "rotation.y", 20, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+        var keyFrames = [];
+
+        keyFrames.push({
+            frame: 0,
+            value: 0
+        });
+
+        keyFrames.push({
+            frame: 2000,
+            value: 359
+        });
+
+        rouletteAnim.setKeys(keyFrames);
+        this._scene.beginDirectAnimation(roulette, [rouletteAnim], 0, 2000, true);
 
         let _globalAxis = new GlobalAxis(100, this._scene);
     }
