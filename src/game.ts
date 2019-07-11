@@ -99,7 +99,15 @@ export class Game {
 
         rouletteAnim.setKeys(keyFrames);
         this._scene.beginDirectAnimation(roulette, [rouletteAnim], 0, 2000, true);
-
+        let event1 = new BABYLON.AnimationEvent(
+            50,
+            function() {
+                console.log("Yeah!");
+            },
+            true
+        );
+        // Attach your event to your animation
+        rouletteAnim.addEvent(event1);
         let _globalAxis = new GlobalAxis(100, this._scene);
 
         //When pointer down event is raised
