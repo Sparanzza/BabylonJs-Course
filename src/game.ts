@@ -1,5 +1,6 @@
 import * as BABYLON from "babylonjs";
 import { GlobalAxis } from "./helperGui";
+import { PickingInfo } from "babylonjs";
 
 export class Game {
     private _canvas: HTMLCanvasElement;
@@ -26,23 +27,6 @@ export class Game {
         // Target the camera to scene origin.
         this._camera.setTarget(BABYLON.Vector3.Zero());
 
-        // this._camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(0, 0, -10), this._scene);
-        // Attach the camera to the canvas.
-
-        // Parameters: name, position, scene
-        // this._camera = new BABYLON.FlyCamera("FlyCamera", new BABYLON.Vector3(0, 5, -10), this._scene);
-
-        // Airplane like rotation, with faster roll correction and banked-turns.
-        // Default is 100. A higher number means slower correction.
-        // this._camera.rollCorrect = 10;
-        // Default is false.
-        // this._camera.bankedTurn = true;
-        // Defaults to 90° in radians in how far banking will roll the camera.
-        // this._camera.bankedTurnLimit = Math.PI / 2;
-        // How much of the Yawing (turning) will affect the Rolling (banked-turn.)
-        // Less than 1 will reduce the Rolling, and more than 1 will increase it.
-        // this._camera.bankedTurnMultiplier = 1;
-
         this._camera.attachControl(this._canvas, false, false);
 
         // Create a basic light, aiming 0,1,0 - meaning, to the sky.
@@ -51,73 +35,79 @@ export class Game {
         this._directionalLight = new BABYLON.DirectionalLight("DirectionalLight", new BABYLON.Vector3(0, -1, 0), this._scene);
         this._directionalLight.intensity = 0.35;
 
-        // Golden Material
-        let goldenMaterial = new BABYLON.StandardMaterial("golden", this._scene);
-        goldenMaterial.diffuseColor = new BABYLON.Color3(255 / 255, 215 / 255, 0 / 255);
-        goldenMaterial.specularColor = new BABYLON.Color3(0.7, 0.5, 0.5);
-        goldenMaterial.ambientColor = new BABYLON.Color3(0.9, 0.7, 0.7);
-
         // velvet texture
         let velvetMaterial = new BABYLON.StandardMaterial("myMaterial", this._scene);
-        let velvet = new BABYLON.Texture("images/velvet.jpg", this._scene);
-        let velvetSpecular = new BABYLON.Texture("images/velvet_specular.png", this._scene);
-        velvet.uScale = velvet.vScale = 30;
-        velvetSpecular.uScale = velvetSpecular.vScale = 30;
-        velvetMaterial.diffuseTexture = velvet;
-        velvetMaterial.specularTexture = velvetSpecular;
-        velvetMaterial.diffuseColor = new BABYLON.Color3(1, 1, 1);
-        velvetMaterial.specularColor = new BABYLON.Color3(1, 1, 1);
+        let velvet = new BABYLON.Texture("images/groundtile.jpg", this._scene);
 
-        let cylinder = BABYLON.MeshBuilder.CreateCylinder("cylinder", { tessellation: 120, height: 10, diameter: 600 }, this._scene);
-        cylinder.position.y = 5.0;
-        cylinder.material = goldenMaterial;
-        let ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 1920, height: 1080, subdivisions: 2 }, this._scene);
+        // let velvetBump = new BABYLON.Texture("images/velvet_specular.png", this._scene);
+        velvet.uScale = velvet.vScale = 5;
+        velvetMaterial.diffuseTexture = velvet;
+        velvetMaterial.specularTexture = velvet;
+        velvetMaterial.specularColor = new BABYLON.Color3(198 / 255, 13 / 255, 37 / 255);
+        velvetMaterial.diffuseColor = new BABYLON.Color3(198 / 255, 13 / 255, 37 / 255);
+
+        let ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 1920, height: 1920, subdivisions: 2 }, this._scene);
         ground.material = velvetMaterial;
 
-        let roulette = BABYLON.MeshBuilder.CreateCylinder("roulette", { tessellation: 120, height: 20, diameter: 550 }, this._scene);
-        roulette.position.y = 5.0;
-        let rouletteMaterial = new BABYLON.StandardMaterial("roulette", this._scene);
-        let rouletteTexture = new BABYLON.Texture("images/roulette.png", this._scene);
-        rouletteTexture.uScale = rouletteTexture.vScale = 0.5;
-        rouletteTexture.uOffset = rouletteTexture.vOffset = 0.25;
-        rouletteMaterial.diffuseTexture = rouletteTexture;
-        roulette.material = rouletteMaterial;
-        console.log(rouletteTexture.toString());
+        // Detect the first mesh touched by the ray
+        let box1 = BABYLON.MeshBuilder.CreateBox("box1", { width: 50, height: 50, depth: 50 }, this._scene);
+        let redMat = new BABYLON.StandardMaterial("red", this._scene);
+        redMat.diffuseColor = new BABYLON.Color3(1, 1, 0.2);
+        box1.material = redMat;
+        box1.position = new BABYLON.Vector3(0, 25, 0);
+        box1.isPickable = false;
 
-        let rouletteAnim = new BABYLON.Animation("rouletteRotate", "rotation.y", 20, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONTYPE_FLOAT);
-        var keyFrames = [];
+        let box2 = BABYLON.MeshBuilder.CreateBox("box1", { width: 50, height: 50, depth: 50 }, this._scene);
+        let blueMat = new BABYLON.StandardMaterial("red", this._scene);
+        blueMat.diffuseColor = new BABYLON.Color3(0.2, 0, 1);
+        box2.material = blueMat;
+        box2.position = new BABYLON.Vector3(-200, 25, 0);
+        box2.setPivotPoint(new BABYLON.Vector3(0, -25, 0), BABYLON.Space.LOCAL);
 
-        keyFrames.push({
-            frame: 0,
-            value: 0
+        this._scene.registerBeforeRender(() => {
+            this.castRay(box1);
         });
-
-        keyFrames.push({
-            frame: 2000,
-            value: 359
-        });
-
-        rouletteAnim.setKeys(keyFrames);
-        this._scene.beginDirectAnimation(roulette, [rouletteAnim], 0, 2000, true);
-        let event1 = new BABYLON.AnimationEvent(
-            50,
-            function() {
-                console.log("Yeah!");
-            },
-            true
-        );
-        // Attach your event to your animation
-        rouletteAnim.addEvent(event1);
-        let _globalAxis = new GlobalAxis(100, this._scene);
-
-        //When pointer down event is raised
-        this._scene.onPointerDown = function(evt, pickResult) {
-            // if the click hits the ground object, we change the impact position
-            // this._scene.beginDirectAnimation(roulette, [rouletteAnim], 0, 2000, false);
-            console.log(evt);
-            console.log(pickResult);
-            this.beginDirectAnimation(roulette, [rouletteAnim], 0, 2000, false);
+        this._scene.onPointerMove = () => {
+            this.mousemovef(box1);
         };
+
+        let _globalAxis = new GlobalAxis(100, this._scene);
+    }
+
+    vecToLocal(vector: BABYLON.Vector3, mesh: BABYLON.Mesh) {
+        var m = mesh.getWorldMatrix();
+        var v = BABYLON.Vector3.TransformCoordinates(vector, m);
+        return v;
+    }
+
+    public castRay(meshCast: BABYLON.Mesh) {
+        // get directional vector
+        let origin = meshCast.position;
+        let forward = new BABYLON.Vector3(0, 0, 1);
+        forward = this.vecToLocal(forward, meshCast);
+
+        let direction = forward.subtract(origin);
+        let ray = new BABYLON.Ray(origin, direction, 1000);
+        let hit = this._scene.pickWithRay(ray);
+        // console.log(hit);
+
+        let rayHelper = new BABYLON.RayHelper(ray);
+        rayHelper.show(this._scene);
+
+        if (hit != null && hit.pickedMesh) {
+            hit.pickedMesh.scaling.y += 0.02;
+        }
+    }
+
+    mousemovef(m: BABYLON.Mesh) {
+        let pickResult = this._scene.pick(this._scene.pointerX, this._scene.pointerY);
+
+        if (pickResult != null)
+            if (pickResult.pickedPoint) {
+                let diffX = pickResult.pickedPoint.x - m.position.x;
+                let diffY = pickResult.pickedPoint.z - m.position.z;
+                m.rotation.y = Math.atan2(diffX, diffY);
+            }
     }
 
     doRender(): void {
