@@ -88,12 +88,12 @@ export class Game {
         box1.animations.push(boxAnimY);
         this._scene.beginAnimation(box1, 0, 12000, true);
 
-        let particleSystem = new BABYLON.ParticleSystem("particles", 20000, this._scene);
+        let particleSystem = new BABYLON.GPUParticleSystem("particles", { capacity: 1000000, randomTextureSize: 4096 }, this._scene);
         let particleTexture = new BABYLON.Texture("images/flare.png", this._scene);
         particleSystem.particleTexture = particleTexture;
         particleSystem.translationPivot = new BABYLON.Vector2(0, -0.5); // In this case the scale will come from the bottom of the particle
 
-        particleSystem.emitter = new BABYLON.Vector3(-1, 2, 3);
+        particleSystem.emitter = box1;
         particleSystem.minEmitBox = new BABYLON.Vector3(-40, 0, -40); // Starting all from
         particleSystem.maxEmitBox = new BABYLON.Vector3(40, 40, 40);
 
