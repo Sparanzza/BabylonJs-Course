@@ -1,5 +1,5 @@
 import * as BABYLON from "babylonjs";
-import { ShadowGenerator, MaterialHelper } from "babylonjs";
+import { ShadowGenerator, MaterialHelper, _BabylonLoaderRegistered } from "babylonjs";
 import { GlobalAxis } from "./helperGui";
 import { PickingInfo } from "babylonjs";
 
@@ -87,6 +87,45 @@ export class Game {
         box1.animations.push(boxAnimX);
         box1.animations.push(boxAnimY);
         this._scene.beginAnimation(box1, 0, 12000, true);
+
+        let particleSystem = new BABYLON.ParticleSystem("particles", 20000, this._scene);
+        let particleTexture = new BABYLON.Texture("images/flare.png", this._scene);
+        particleSystem.particleTexture = particleTexture;
+        particleSystem.translationPivot = new BABYLON.Vector2(0, -0.5); // In this case the scale will come from the bottom of the particle
+
+        particleSystem.emitter = new BABYLON.Vector3(-1, 2, 3);
+        particleSystem.minEmitBox = new BABYLON.Vector3(-40, 0, -40); // Starting all from
+        particleSystem.maxEmitBox = new BABYLON.Vector3(40, 40, 40);
+
+        // size
+        particleSystem.minSize = 1.5;
+        particleSystem.maxSize = 3;
+        particleSystem.minLifeTime = 2;
+        particleSystem.maxLifeTime = 50;
+        particleSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_ADD;
+        particleSystem.emitRate = 10000;
+        // velocity
+        particleSystem.minEmitPower = 5;
+        particleSystem.maxEmitPower = 50;
+        particleSystem.updateSpeed = 0.005;
+        particleSystem.addVelocityGradient(0, 0.5);
+        particleSystem.addDragGradient(0, 0.5);
+        particleSystem.addAlphaRemapGradient(0, 0, 0.1);
+        particleSystem.addAlphaRemapGradient(1.0, 0.1, 0.8);
+        particleSystem.color1 = new BABYLON.Color4(0.7, 0.8, 1.0, 1.0);
+        particleSystem.color2 = new BABYLON.Color4(0.2, 0.5, 1.0, 1.0);
+        particleSystem.colorDead = new BABYLON.Color4(0, 0, 0.2, 0.0);
+        //Gravity
+        particleSystem.gravity = new BABYLON.Vector3(0, -9.81, 0);
+
+        // direction
+        particleSystem.direction1 = new BABYLON.Vector3(-7, 8, 3);
+        particleSystem.direction2 = new BABYLON.Vector3(7, 8, -3);
+
+        particleSystem.billboardMode = BABYLON.ParticleSystem.BILLBOARDMODE_ALL;
+
+        particleSystem.start();
+        this._scene.gravity = new BABYLON.Vector3(0, -9.81, 0);
         let _globalAxis = new GlobalAxis(100, this._scene);
     }
 
