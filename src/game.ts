@@ -1,5 +1,5 @@
 import * as BABYLON from "babylonjs";
-import { ShadowGenerator } from "babylonjs";
+import { ShadowGenerator, MaterialHelper } from "babylonjs";
 import { GlobalAxis } from "./helperGui";
 import { PickingInfo } from "babylonjs";
 
@@ -30,10 +30,16 @@ export class Game {
         // Create a basic light, aiming 0,1,0 - meaning, to the sky.
         this._light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), this._scene);
         this._light.intensity = 0.35;
-        this._spotLight = new BABYLON.SpotLight("spot02", new BABYLON.Vector3(50, 200, 50), new BABYLON.Vector3(-1, -2, -1), 1.1, 16, this._scene);
+        this._spotLight = new BABYLON.SpotLight("spot02", new BABYLON.Vector3(400, 200, 400), new BABYLON.Vector3(-1, -1, -1), 1.1, 16, this._scene);
         this._spotLight.intensity = 2;
-        this._spotLight;
+        this._spotLight.exponent = 20;
 
+        // spot sphere
+        let spHelper = BABYLON.MeshBuilder.CreateSphere("spHelper", { diameter: 20 }, this._scene);
+        let spHelperMat = new BABYLON.StandardMaterial("spotlightMat", this._scene);
+        spHelperMat.emissiveColor = new BABYLON.Color3(1, 0.5, 0);
+        spHelper.material = spHelperMat;
+        spHelper.parent = this._spotLight;
         // velvet texture
         let velvetMaterial = new BABYLON.StandardMaterial("myMaterial", this._scene);
         let velvet = new BABYLON.Texture("images/groundtile.jpg", this._scene);
@@ -51,17 +57,20 @@ export class Game {
         let redMat = new BABYLON.StandardMaterial("red", this._scene);
         redMat.diffuseColor = new BABYLON.Color3(1, 0.5, 0.2);
         box1.material = redMat;
-        box1.position = new BABYLON.Vector3(0, 25, 0);
+        box1.position = new BABYLON.Vector3(0, 50, 0);
         box1.isPickable = false;
-        box1.showBoundingBox = true;
 
         // Shadows
         this.generator = new ShadowGenerator(1024, this._spotLight);
         if (this.generator) {
             this.generator.addShadowCaster(box1);
-            this.generator.useBlurExponentialShadowMap = true;
-            this.generator.useKernelBlur = true;
-            this.generator.blurKernel = 64;
+            // this.generator.useBlurExponentialShadowMap = true;
+            // this.generator.useKernelBlur = true;
+            // this.generator.blurKernel = 64;
+            // this.generator.usePercentageCloserFiltering = true;
+            this.generator.useContactHardeningShadow = true;
+            this.generator.filteringQuality = BABYLON.ShadowGenerator.QUALITY_HIGH;
+            this.generator.contactHardeningLightSizeUVRatio = 0.2;
         }
 
         ground.receiveShadows = true;
@@ -71,13 +80,13 @@ export class Game {
 
         let keys = [];
         keys.push({ frame: 0, value: 0 });
-        keys.push({ frame: 6000, value: 360 });
+        keys.push({ frame: 12000, value: 360 });
         boxAnimX.setKeys(keys);
         boxAnimY.setKeys(keys);
 
         box1.animations.push(boxAnimX);
         box1.animations.push(boxAnimY);
-        this._scene.beginAnimation(box1, 0, 6000, true);
+        this._scene.beginAnimation(box1, 0, 12000, true);
         let _globalAxis = new GlobalAxis(100, this._scene);
     }
 
