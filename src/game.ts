@@ -1,7 +1,8 @@
 import * as BABYLON from "babylonjs";
-import { ShadowGenerator, MaterialHelper, _BabylonLoaderRegistered, StandardMaterial } from "babylonjs";
+import { ShadowGenerator, _BabylonLoaderRegistered, StandardMaterial, Skeleton } from "babylonjs";
 import { GlobalAxis } from "./helperGui";
 import "babylonjs-loaders";
+import * as dat from "dat.gui";
 
 export class Game {
     private _canvas: HTMLCanvasElement;
@@ -104,7 +105,7 @@ export class Game {
             blurKernelSize: 64,
             mainTextureSamples: 4
         });
-        gl.intensity = 0.4;
+        gl.intensity = 0.6;
 
         BABYLON.SceneLoader.ImportMeshAsync("", "./models/", "sicBo_00.gltf", this._scene).then(container => {
             this.sicbo = container.meshes;
@@ -128,6 +129,10 @@ export class Game {
             container.meshes[2].material = glassMat;
             container.meshes[5].material = sphericalMat;
 
+            let anim = container.animationGroups.find(e => e.name == "animation1");
+            console.log(anim);
+            this._scene.stopAllAnimations();
+            (<any>anim).play();
             // container.addAllToScene();
         });
 
