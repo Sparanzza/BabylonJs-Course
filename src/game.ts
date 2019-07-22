@@ -1,5 +1,5 @@
 import * as BABYLON from "babylonjs";
-import { ShadowGenerator, MaterialHelper, _BabylonLoaderRegistered } from "babylonjs";
+import { ShadowGenerator, MaterialHelper, _BabylonLoaderRegistered, StandardMaterial } from "babylonjs";
 import { GlobalAxis } from "./helperGui";
 import "babylonjs-loaders";
 
@@ -25,8 +25,8 @@ export class Game {
         this._scene.clearColor = new BABYLON.Color4(0.4, 0.4, 0.4, 1);
         this._scene.ambientColor = new BABYLON.Color3(0.4, 0.4, 0.4);
 
-        this._camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 4, 4, new BABYLON.Vector3(0, 1150, 200), this._scene);
-        this._camera.setTarget(BABYLON.Vector3.Zero());
+        this._camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 4, 4, new BABYLON.Vector3(0, 1400, 700), this._scene);
+        this._camera.setTarget(new BABYLON.Vector3(0, 0, 200));
         this._camera.attachControl(this._canvas, false, false);
         this._camera.fov = 0.785398;
 
@@ -40,18 +40,11 @@ export class Game {
         this._spotLight2 = new BABYLON.SpotLight("spot02", new BABYLON.Vector3(-400, 400, 400), new BABYLON.Vector3(1, -1, -1), 1.1, 16, this._scene);
         this._spotLight2.intensity = 2;
 
-        // spot sphere
-        let spHelper = BABYLON.MeshBuilder.CreateSphere("spHelper", { diameter: 20 }, this._scene);
-        let spHelperMat = new BABYLON.StandardMaterial("spotlightMat", this._scene);
-        spHelperMat.emissiveColor = new BABYLON.Color3(1, 0.5, 0);
-        spHelper.material = spHelperMat;
-        spHelper.parent = this._spotLight;
-
         // velvet texture
         let velvetMaterial = new BABYLON.StandardMaterial("myMaterial", this._scene);
         let velvet = new BABYLON.Texture("images/groundtile.jpg", this._scene);
-        velvet.uScale = 3 * 1.7888;
-        velvet.vScale = 3;
+        velvet.uScale = 5;
+        velvet.vScale = 5;
 
         velvet.coordinatesMode = 2;
         velvetMaterial.specularTexture = velvet;
@@ -59,19 +52,61 @@ export class Game {
         velvetMaterial.specularColor = new BABYLON.Color3(198 / 255, 13 / 255, 37 / 255);
         velvetMaterial.diffuseColor = new BABYLON.Color3(198 / 255, 13 / 255, 37 / 255);
 
-        let ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 1920, height: 1080, subdivisions: 2 }, this._scene);
+        let ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 3072, height: 3072, subdivisions: 2 }, this._scene);
         ground.material = velvetMaterial;
         ground.receiveShadows = true;
 
         var sphericalMat = new BABYLON.StandardMaterial("sphericalMat", this._scene);
-        sphericalMat.reflectionTexture = new BABYLON.Texture("images/hdr/hdr_2.jpg", this._scene);
+        let goldenReflectionTexture = new BABYLON.Texture("images/hdr/hdr_3.jpg", this._scene);
+        goldenReflectionTexture.uRotationCenter = Math.PI / 1.5;
+        goldenReflectionTexture.vRotationCenter = Math.PI / 2.5;
+        goldenReflectionTexture.wRotationCenter = Math.PI / 1.5;
+        sphericalMat.reflectionTexture = goldenReflectionTexture;
         sphericalMat.reflectionTexture.coordinatesMode = BABYLON.Texture.SPHERICAL_MODE;
-        // sphericalMat.diffuseColor = new BABYLON.Color3(198 / 255, 13 / 255, 37 / 255);
-        sphericalMat.alphaMode = BABYLON.Engine.ALPHA_COMBINE;
-        sphericalMat.reflectionFresnelParameters = new BABYLON.FresnelParameters();
-        sphericalMat.reflectionFresnelParameters.bias = 0.1;
-        spHelper.material = sphericalMat;
-        BABYLON.SceneLoader.LoadAssetContainerAsync("./models/", "sicBo_00.gltf", this._scene).then(container => {
+        sphericalMat.diffuseColor = new BABYLON.Color3(198 / 255, 130 / 255, 10 / 255);
+        sphericalMat.specularPower = 100;
+        sphericalMat.alphaMode = BABYLON.Engine.ALPHA_ADD;
+        // sphericalMat.reflectionFresnelParameters = new BABYLON.FresnelParameters();
+        // sphericalMat.reflectionFresnelParameters.bias = 0.1;
+        sphericalMat.ambientColor = new BABYLON.Color3(198 / 255, 130 / 255, 10 / 255);
+        sphericalMat.emissiveColor = new BABYLON.Color3(40 / 255, 50 / 255, 10 / 255);
+        StandardMaterial.FresnelEnabled = true;
+
+        var glassMat = new BABYLON.StandardMaterial("glassMat", this._scene);
+        let textureEnviroment = new BABYLON.Texture("images/hdr/hdr_3.jpg", this._scene);
+        textureEnviroment.vAng = 100;
+        glassMat.reflectionTexture = textureEnviroment;
+        glassMat.alphaMode = BABYLON.Engine.ALPHA_SCREENMODE;
+        glassMat.reflectionTexture.coordinatesMode = BABYLON.Texture.SPHERICAL_MODE;
+        glassMat.diffuseColor = new BABYLON.Color3(0 / 255, 0 / 255, 0 / 255);
+        glassMat.emissiveColor = new BABYLON.Color3(20 / 255, 20 / 255, 20 / 255);
+        glassMat.specularPower = 16;
+
+        // Fresnel
+        glassMat.reflectionFresnelParameters = new BABYLON.FresnelParameters();
+        glassMat.reflectionFresnelParameters.bias = 0.1;
+        // glassMat.reflectionFresnelParameters.leftColor = BABYLON.Color3.Black();
+        // glassMat.reflectionFresnelParameters.rightColor = BABYLON.Color3.White();
+        glassMat.reflectionFresnelParameters.power = 4;
+
+        glassMat.emissiveFresnelParameters = new BABYLON.FresnelParameters();
+        glassMat.emissiveFresnelParameters.bias = 0.6;
+        glassMat.emissiveFresnelParameters.power = 4;
+        glassMat.emissiveFresnelParameters.leftColor = BABYLON.Color3.White();
+        glassMat.emissiveFresnelParameters.rightColor = BABYLON.Color3.Black();
+
+        glassMat.opacityFresnelParameters = new BABYLON.FresnelParameters();
+        glassMat.opacityFresnelParameters.leftColor = BABYLON.Color3.White();
+        glassMat.opacityFresnelParameters.rightColor = BABYLON.Color3.Black();
+
+        var gl = new BABYLON.GlowLayer("glow", this._scene, {
+            mainTextureFixedSize: 1024,
+            blurKernelSize: 64,
+            mainTextureSamples: 4
+        });
+        gl.intensity = 0.4;
+
+        BABYLON.SceneLoader.ImportMeshAsync("", "./models/", "sicBo_00.gltf", this._scene).then(container => {
             this.sicbo = container.meshes;
             console.log(this.sicbo);
 
@@ -90,8 +125,10 @@ export class Game {
                 // this.generator.contactHardeningLightSizeUVRatio = 0.2;
             }
 
-            container.meshes[0].material = sphericalMat;
-            container.addAllToScene();
+            container.meshes[2].material = glassMat;
+            container.meshes[5].material = sphericalMat;
+
+            // container.addAllToScene();
         });
 
         ground.receiveShadows = true;
