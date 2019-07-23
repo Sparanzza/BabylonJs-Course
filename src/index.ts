@@ -1,4 +1,4 @@
-import { Game } from "./game";
+import { Game } from "./Game";
 
 window.addEventListener("DOMContentLoaded", () => {
     // Create the game using the 'renderCanvas'.

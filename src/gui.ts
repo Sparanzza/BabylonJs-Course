@@ -1,33 +1,28 @@
-import { AbstractMesh } from "babylonjs";
-import { AdvancedDynamicTexture, Rectangle, Control, TextBlock } from "babylonjs-gui";
+import dat from "dat.gui";
 
-let advancedTexture: AdvancedDynamicTexture;
+export class Gui {
+    public gui: dat.GUI;
 
-function init(): void {
-    if (!advancedTexture) {
-        advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("uil");
+    constructor() {
+        let obj = {
+            message: "Message",
+            dice0: 1,
+            dice1: 1,
+            push: () => {
+                this.PushDice();
+            }
+        };
+        window.onload = function() {
+            let gui = new dat.GUI();
+            gui.add(obj, "message");
+            gui.add(obj, "dice0");
+            gui.add(obj, "dice1");
+            gui.add(obj, "push");
+        };
     }
-}
 
-export function addLabelToMesh(mesh: AbstractMesh): void {
-    if (!advancedTexture) {
-        init();
+    PushDice() {
+        // TODO
+        console.log("PushDice");
     }
-    let label: Rectangle = new Rectangle("label for " + mesh.name);
-    label.background = "black";
-    label.height = "30px";
-    label.alpha = 0.5;
-    label.width = "100px";
-    label.cornerRadius = 20;
-    label.thickness = 1;
-    label.linkOffsetY = 30;
-    label.top = "10%";
-    label.zIndex = 5;
-    label.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-    advancedTexture.addControl(label);
-
-    const text1: TextBlock = new TextBlock();
-    text1.text = mesh.name;
-    text1.color = "white";
-    label.addControl(text1);
 }

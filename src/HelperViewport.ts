@@ -1,8 +1,12 @@
 import * as BABYLON from "babylonjs";
 import { Mesh } from "babylonjs";
 
-export class GlobalAxis {
-    constructor(size: number, scene: BABYLON.Scene) {
+export class HelperViewport {
+    constructor(_size: number, _scene: BABYLON.Scene) {
+        this.init(_size, _scene);
+    }
+
+    init(size: number, scene: BABYLON.Scene) {
         let axisX = BABYLON.Mesh.CreateLines("axisX", [BABYLON.Vector3.Zero(), new BABYLON.Vector3(size, 0, 0), new BABYLON.Vector3(size * 0.95, 0.05 * size, 0), new BABYLON.Vector3(size, 0, 0), new BABYLON.Vector3(size * 0.95, -0.05 * size, 0)], scene);
         axisX.color = new BABYLON.Color3(1, 0, 0);
         var xChar = this.makeTextPlane("X", "red", size / 10, scene);
