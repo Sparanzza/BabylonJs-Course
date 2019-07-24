@@ -9,7 +9,7 @@ export class Gold {
         this.material.reflectionTexture = this.texture;
         this.material.reflectionTexture.coordinatesMode = BABYLON.Texture.SPHERICAL_MODE;
         this.material.diffuseColor = new BABYLON.Color3(198 / 255, 130 / 255, 10 / 255);
-        this.material.specularPower = 100;
+        this.material.specularPower = 10;
         this.material.alphaMode = BABYLON.Engine.ALPHA_ADD;
 
         this.material.ambientColor = new BABYLON.Color3(198 / 255, 130 / 255, 10 / 255);
@@ -17,5 +17,3 @@ export class Gold {
         BABYLON.StandardMaterial.FresnelEnabled = true;
     }
 }
-
-// "images/hdr/hdr_3.jpg"

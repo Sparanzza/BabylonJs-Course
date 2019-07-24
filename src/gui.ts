@@ -1,7 +1,9 @@
 import dat from "dat.gui";
+import { Loader } from "./Loader";
 
 export class Gui {
     public gui: dat.GUI;
+    public _sicbo: Loader;
 
     constructor() {
         let obj = {
@@ -9,20 +11,19 @@ export class Gui {
             dice0: 1,
             dice1: 1,
             push: () => {
-                this.PushDice();
+                this.Push();
             }
         };
-        window.onload = function() {
-            let gui = new dat.GUI();
-            gui.add(obj, "message");
-            gui.add(obj, "dice0");
-            gui.add(obj, "dice1");
-            gui.add(obj, "push");
-        };
+
+        this.gui = new dat.GUI();
+        this.gui.add(obj, "message");
+        this.gui.add(obj, "dice0");
+        this.gui.add(obj, "dice1");
+        this.gui.add(obj, "push");
     }
 
-    PushDice() {
-        // TODO
-        console.log("PushDice");
+    Push() {
+        console.log(this._sicbo.animationGroups);
+        (<any>this._sicbo.animationGroups.find((e: any) => e.name == "pushDices")).play();
     }
 }

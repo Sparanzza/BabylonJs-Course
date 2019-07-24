@@ -3,8 +3,10 @@ export class Glass {
     public material: BABYLON.StandardMaterial;
     public textureEnv: BABYLON.Texture;
 
-    constructor(scene: BABYLON.Scene) {
+    constructor(pathTexture: string, scene: BABYLON.Scene) {
         this.material = new BABYLON.StandardMaterial("glassMat", scene);
+        this.setReflection(pathTexture, scene);
+        this.setFresnel();
     }
 
     setReflection(path: string, scene: BABYLON.Scene) {
@@ -13,9 +15,9 @@ export class Glass {
         this.material.reflectionTexture = textureEnviroment;
         this.material.alphaMode = BABYLON.Engine.ALPHA_SCREENMODE;
         this.material.reflectionTexture.coordinatesMode = BABYLON.Texture.SPHERICAL_MODE;
-        this.material.diffuseColor = new BABYLON.Color3(0 / 255, 0 / 255, 0 / 255);
+        this.material.diffuseColor = new BABYLON.Color3(0 / 255, 20 / 255, 30 / 255);
         this.material.emissiveColor = new BABYLON.Color3(20 / 255, 20 / 255, 20 / 255);
-        this.material.specularPower = 16;
+        this.material.specularPower = 32;
     }
 
     setFresnel() {

@@ -9,12 +9,12 @@ export class Lights {
 
     constructor(public scene: BABYLON.Scene) {
         this.light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
-        this.spotLightL = new BABYLON.SpotLight("spotLightL", new BABYLON.Vector3(400, 400, 400), new BABYLON.Vector3(-1, -1, -1), 1.1, 16, scene);
-        this.spotLightR = new BABYLON.SpotLight("spotLightR", new BABYLON.Vector3(-400, 400, 400), new BABYLON.Vector3(1, -1, -1), 1.1, 16, scene);
+        this.spotLightL = new BABYLON.SpotLight("spotLightL", new BABYLON.Vector3(400, 400, 400), new BABYLON.Vector3(-1, -1, -1), 10, 16, scene);
+        this.spotLightR = new BABYLON.SpotLight("spotLightR", new BABYLON.Vector3(-400, 400, 400), new BABYLON.Vector3(1, -1, -1), 10, 16, scene);
 
         this.light.intensity = 0.5;
-        this.spotLightL.intensity = 2;
-        this.spotLightR.intensity = 2;
+        this.spotLightL.intensity = 3;
+        this.spotLightR.intensity = 3;
     }
 
     public setSpotlightLIntensity(i: number) {
