@@ -1,7 +1,5 @@
 import * as BABYLON from "babylonjs";
 import "babylonjs-loaders";
-import { Glass } from "./Materials/Glass";
-import { Gold } from "./Materials/Gold";
 import { SceneLoader } from "babylonjs";
 
 export class Loader {
@@ -19,10 +17,15 @@ export class Loader {
         mesh.material = material;
     }
 
+    setKeyframe(animationGroupName: string, targetProperty: string, targetAnimation: string) {
+        let animationGroup = <any>this.animationGroups.find((e: any) => e.name == animationGroupName);
+        // animationGroup.targetedAnimation.array.forEach(e => {
+        //     e.
+        // });
+    }
+
     startAnimation(name: string) {
-        console.log(name);
         console.log(this.animationGroups.filter(a => a.name == name)[0]);
-        // let animation: BABYLON.AnimationGroups = this.animationGroups.filter(a => a.name == name)[0];
-        // animation.play();
+        (<any>this.animationGroups.find((e: any) => e.name == name)).play();
     }
 }

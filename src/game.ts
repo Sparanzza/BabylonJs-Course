@@ -29,6 +29,9 @@ export class Game {
 
     private pathImageHdr = "images/hdr/";
     private hdrImage = "hdr_1.jpg";
+    private pathModels = "./models/";
+    private groundTile = "images/groundtile.jpg";
+    private sicBoFileName = "sicBo.gltf";
 
     constructor(canvasElement: string) {
         this._canvas = document.getElementById(canvasElement) as HTMLCanvasElement;
@@ -46,11 +49,11 @@ export class Game {
         this.cameras = new Cameras(this._scene, this._canvas); // Cameras
 
         // Ground
-        this.velvetMat = new Velvet("images/groundtile.jpg", this._scene);
+        this.velvetMat = new Velvet(this.groundTile, this._scene);
         this.ground = new Ground(3072, 3072, this._scene); //Ground
         this.ground.setMaterial(this.velvetMat.material);
 
-        this.sicbo = new Loader("./models/", "sicBo.gltf"); // Loaders
+        this.sicbo = new Loader(this.pathModels, this.sicBoFileName); // Loaders
         this.sicbo.load(this._scene).then((c: any) => {
             console.log(c);
             this.sicbo.meshes = c.meshes;
@@ -62,9 +65,12 @@ export class Game {
             this.gui._sicbo = this.sicbo;
             // console.log(this.gui);
             console.log(this.sicbo.meshes);
+            console.log(this.sicbo.animationGroups);
         });
 
         new FX(this._scene); // FX
+        console.log("scene");
+        console.log(this._scene.animationGroups);
         console.log(this.sicbo);
     }
 

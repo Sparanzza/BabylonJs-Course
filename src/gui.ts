@@ -12,6 +12,9 @@ export class Gui {
             dice1: 1,
             push: () => {
                 this.Push();
+            },
+            rotate: () => {
+                this.Rotate();
             }
         };
 
@@ -20,10 +23,13 @@ export class Gui {
         this.gui.add(obj, "dice0");
         this.gui.add(obj, "dice1");
         this.gui.add(obj, "push");
+        this.gui.add(obj, "rotate");
     }
 
     Push() {
-        console.log(this._sicbo.animationGroups);
-        (<any>this._sicbo.animationGroups.find((e: any) => e.name == "pushDices")).play();
+        this._sicbo.startAnimation("pushDices");
+    }
+    Rotate() {
+        this._sicbo.startAnimation("selectFaces");
     }
 }
