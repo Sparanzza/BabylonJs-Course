@@ -7,7 +7,7 @@ export class FX {
             blurKernelSize: 64,
             mainTextureSamples: 4
         });
-        this.glow.intensity = 0.2;
+        this.glow.intensity = 0.4;
     }
     setIntensity(i: number) {
         this.glow.intensity = i;

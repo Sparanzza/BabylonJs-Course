@@ -56,6 +56,7 @@ export class Game {
         this.sicbo = new Loader(this.pathModels, this.sicBoFileName); // Loaders
         this.sicbo.load(this._scene).then((c: any) => {
             console.log(c);
+            console.log(c.meshes);
             this.sicbo.meshes = c.meshes;
             this.sicbo.animationGroups = c.animationGroups;
             this._scene.stopAllAnimations();
@@ -63,15 +64,13 @@ export class Game {
             this.sicbo.setMaterial("glass", new Glass(this.pathImageHdr + this.hdrImage, this._scene).material);
 
             this.gui._sicbo = this.sicbo;
-            // console.log(this.gui);
-            console.log(this.sicbo.meshes);
-            console.log(this.sicbo.animationGroups);
         });
 
         new FX(this._scene); // FX
-        console.log("scene");
-        console.log(this._scene.animationGroups);
-        console.log(this.sicbo);
+    }
+
+    startGame() {
+        // TODO
     }
 
     doRender(): void {

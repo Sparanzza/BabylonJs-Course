@@ -17,15 +17,25 @@ export class Loader {
         mesh.material = material;
     }
 
-    setKeyframe(animationGroupName: string, targetProperty: string, targetAnimation: string) {
+    setKeyframe(animationGroupName: string, targetPropertyName: string, targetName: string) {
         let animationGroup = <any>this.animationGroups.find((e: any) => e.name == animationGroupName);
-        // animationGroup.targetedAnimation.array.forEach(e => {
-        //     e.
-        // });
+        // console.log(animationGroup);
+        let targetProperty = animationGroup.targetedAnimations
+            .filter((e: any) => {
+                return e.animation.targetProperty == targetPropertyName;
+            })
+            .find((e: any) => {
+                return e.target.name == targetName;
+            });
+        console.log(targetProperty);
     }
 
     startAnimation(name: string) {
-        console.log(this.animationGroups.filter(a => a.name == name)[0]);
+        // console.log(this.animationGroups.filter(a => a.name == name)[0]);
         (<any>this.animationGroups.find((e: any) => e.name == name)).play();
+    }
+
+    getMesh(name: string): BABYLON.AbstractMesh {
+        return <BABYLON.AbstractMesh>this.meshes.find((e: any) => e.name == name);
     }
 }

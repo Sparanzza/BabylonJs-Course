@@ -30,6 +30,7 @@ export class Gui {
         this._sicbo.startAnimation("pushDices");
     }
     Rotate() {
-        this._sicbo.startAnimation("selectFaces");
+        this._sicbo.startAnimation("selectFace");
+        this._sicbo.setKeyframe("selectFace", "rotationQuaternion", "SELECT_FACE_2");
     }
 }
