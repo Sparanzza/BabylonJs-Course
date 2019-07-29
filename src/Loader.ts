@@ -12,12 +12,12 @@ export class Loader {
         return BABYLON.SceneLoader.ImportMeshAsync("", this.path, this.file, scene);
     }
 
-    setMaterial(name: string, material: BABYLON.StandardMaterial) {
+    public setMaterial(name: string, material: BABYLON.StandardMaterial) {
         let mesh: BABYLON.AbstractMesh = this.meshes.filter(m => m.name == name)[0];
         mesh.material = material;
     }
 
-    setKeyframe(animationGroupName: string, targetPropertyName: string, targetName: string) {
+    public setKeyframe(animationGroupName: string, targetPropertyName: string, targetName: string, key: any, indexKey: number) {
         let animationGroup = <any>this.animationGroups.find((e: any) => e.name == animationGroupName);
         // console.log(animationGroup);
         let targetProperty = animationGroup.targetedAnimations
@@ -27,15 +27,18 @@ export class Loader {
             .find((e: any) => {
                 return e.target.name == targetName;
             });
+
+        targetProperty.animation._keys[indexKey].value = key;
         console.log(targetProperty);
     }
 
-    startAnimation(name: string) {
+    public startAnimation(name: string) {
         // console.log(this.animationGroups.filter(a => a.name == name)[0]);
         (<any>this.animationGroups.find((e: any) => e.name == name)).play();
+        console.log(this.animationGroups.find((e: any) => e.name == name));
     }
 
-    getMesh(name: string): BABYLON.AbstractMesh {
+    public getMesh(name: string): BABYLON.AbstractMesh {
         return <BABYLON.AbstractMesh>this.meshes.find((e: any) => e.name == name);
     }
 }

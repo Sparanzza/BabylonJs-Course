@@ -12,10 +12,17 @@ import { Velvet } from "./Materials/Velvet";
 //Meshes
 import { Ground } from "./Models/Ground";
 import { Loader } from "./Loader";
+import { SicBo } from "./Models/SicBo";
 
 import { FX } from "./FX";
 
 export class Game {
+    private pathImageHdr = "images/hdr/";
+    private hdrImage = "hdr_1.jpg";
+    private pathModels = "./models/";
+    private groundTile = "images/groundtile.jpg";
+    private sicBoFileName = "sicBo.gltf";
+
     private _canvas: HTMLCanvasElement;
     private _engine: BABYLON.Engine;
     private _scene: BABYLON.Scene;
@@ -23,15 +30,9 @@ export class Game {
 
     private lights: Lights;
     private cameras: Cameras;
-    private sicbo: Loader;
+    private sicbo: SicBo;
     private ground: Ground;
     private velvetMat: Velvet;
-
-    private pathImageHdr = "images/hdr/";
-    private hdrImage = "hdr_1.jpg";
-    private pathModels = "./models/";
-    private groundTile = "images/groundtile.jpg";
-    private sicBoFileName = "sicBo.gltf";
 
     constructor(canvasElement: string) {
         this._canvas = document.getElementById(canvasElement) as HTMLCanvasElement;
@@ -53,24 +54,28 @@ export class Game {
         this.ground = new Ground(3072, 3072, this._scene); //Ground
         this.ground.setMaterial(this.velvetMat.material);
 
-        this.sicbo = new Loader(this.pathModels, this.sicBoFileName); // Loaders
+        this.sicbo = new SicBo(this.pathModels, this.sicBoFileName); // Loaders
         this.sicbo.load(this._scene).then((c: any) => {
-            console.log(c);
-            console.log(c.meshes);
             this.sicbo.meshes = c.meshes;
             this.sicbo.animationGroups = c.animationGroups;
-            this._scene.stopAllAnimations();
+            this.sicbo.getMesh("SELECT_FACE_1").setPivotPoint(new BABYLON.Vector3(0, 42, 0), BABYLON.Space.LOCAL);
+            this.sicbo.getMesh("SELECT_FACE_2").setPivotPoint(new BABYLON.Vector3(0, 42, 0), BABYLON.Space.LOCAL);
             this.sicbo.setMaterial("goldFrame", new Gold(this.pathImageHdr + this.hdrImage, this._scene).material);
             this.sicbo.setMaterial("glass", new Glass(this.pathImageHdr + this.hdrImage, this._scene).material);
 
-            this.gui._sicbo = this.sicbo;
+            this._scene.stopAllAnimations();
         });
 
         new FX(this._scene); // FX
+        this.gui.game = this;
     }
 
     startGame() {
         // TODO
+    }
+    public playNewGame(n0: number, n1: number) {
+        this.sicbo.setDicesFacesResult(n0, n1);
+        this.sicbo.startAnimation("pushDices");
     }
 
     doRender(): void {
