@@ -19,6 +19,7 @@ import { FX } from "./FX";
 export class Game {
     private pathImageHdr = "images/hdr/";
     private hdrImage = "hdr_1.jpg";
+    private hdrImageBlur = "hdr_1_Blur.jpg";
     private pathModels = "./models/";
     private groundTile = "images/groundtile.jpg";
     private sicBoFileName = "sicBo.gltf";
@@ -51,19 +52,28 @@ export class Game {
 
         // Ground
         this.velvetMat = new Velvet(this.groundTile, this._scene);
-        this.ground = new Ground(3072, 3072, this._scene); //Ground
+        this.ground = new Ground(3200, 3200, this._scene); //Ground
         this.ground.setMaterial(this.velvetMat.material);
 
         this.sicbo = new SicBo(this.pathModels, this.sicBoFileName); // Loaders
         this.sicbo.load(this._scene).then((c: any) => {
             this.sicbo.meshes = c.meshes;
             this.sicbo.animationGroups = c.animationGroups;
+            this._scene.stopAllAnimations();
+
+            // Materials assigns
             this.sicbo.getMesh("SELECT_FACE_1").setPivotPoint(new BABYLON.Vector3(0, 42, 0), BABYLON.Space.LOCAL);
             this.sicbo.getMesh("SELECT_FACE_2").setPivotPoint(new BABYLON.Vector3(0, 42, 0), BABYLON.Space.LOCAL);
-            this.sicbo.setMaterial("goldFrame", new Gold(this.pathImageHdr + this.hdrImage, this._scene).material);
-            this.sicbo.setMaterial("glass", new Glass(this.pathImageHdr + this.hdrImage, this._scene).material);
 
-            this._scene.stopAllAnimations();
+            this.sicbo.setMaterial("goldFrame", new Gold(this.pathImageHdr + this.hdrImage, this._scene).material);
+            this.sicbo.setMaterial("glass", new Glass(this.pathImageHdr + this.hdrImage, this._scene, false).material);
+
+            this.sicbo.setMaterial("goldDicesFrame", new Gold(this.pathImageHdr + this.hdrImage, this._scene).material);
+            this.sicbo.setMaterial("goldMenuFrame", new Gold(this.pathImageHdr + this.hdrImage, this._scene).material);
+            this.sicbo.setMaterial("glasses", new Glass(this.pathImageHdr + this.hdrImageBlur, this._scene, true).material);
+            console.log(this.sicbo.getMesh("goldDicesFrame"));
+            console.log(this.sicbo.getMesh("goldMenuFrame"));
+            console.log(this.sicbo.getMesh("glasses"));
         });
 
         new FX(this._scene); // FX

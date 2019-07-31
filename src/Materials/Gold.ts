@@ -8,6 +8,8 @@ export class Gold {
 
         this.material.reflectionTexture = this.texture;
         this.material.reflectionTexture.coordinatesMode = BABYLON.Texture.SPHERICAL_MODE;
+        this.material.reflectionTexture.level = 0.5;
+
         this.material.diffuseColor = new BABYLON.Color3(198 / 255, 130 / 255, 10 / 255);
         this.material.specularPower = 10;
         this.material.alphaMode = BABYLON.Engine.ALPHA_ADD;
