@@ -15,12 +15,12 @@ export class Glass {
         this.material.reflectionTexture = textureEnviroment;
         this.material.reflectionTexture.coordinatesMode = BABYLON.Texture.SPHERICAL_MODE;
         this.material.diffuseColor = new BABYLON.Color3(0 / 255, 20 / 255, 30 / 255);
-        this.material.emissiveColor = new BABYLON.Color3(20 / 255, 20 / 255, 20 / 255);
+        this.material.emissiveColor = new BABYLON.Color3(20 / 255, 30 / 255, 50 / 255);
         this.material.specularPower = 32;
         if (darkGlass) {
-            this.material.reflectionTexture.level = 0.35;
+            this.material.reflectionTexture.level = 0.5;
             this.material.emissiveColor = new BABYLON.Color3(50 / 255, 20 / 255, 20 / 255);
-            this.material.alpha = 0.1;
+            this.material.alpha = 0.3;
         } else {
             this.material.alphaMode = BABYLON.Engine.ALPHA_SCREENMODE;
         }
@@ -28,8 +28,8 @@ export class Glass {
 
     setFresnel(darkGlass: Boolean) {
         this.material.reflectionFresnelParameters = new BABYLON.FresnelParameters();
-        this.material.reflectionFresnelParameters.bias = 0.1;
-        this.material.reflectionFresnelParameters.power = 4;
+        this.material.reflectionFresnelParameters.bias = 0.01;
+        this.material.reflectionFresnelParameters.power = 10;
 
         this.material.emissiveFresnelParameters = new BABYLON.FresnelParameters();
         this.material.emissiveFresnelParameters.bias = 0.6;

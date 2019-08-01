@@ -5,6 +5,7 @@ import { Lights } from "./Lights";
 import { Cameras } from "./Cameras";
 import { Glass } from "./Materials/Glass";
 import { Gold } from "./Materials/Gold";
+import { Copper } from "./Materials/Copper";
 import { SceneLoader, AnimationGroup } from "babylonjs";
 //Material
 import { Velvet } from "./Materials/Velvet";
@@ -28,6 +29,7 @@ export class Game {
     private _engine: BABYLON.Engine;
     private _scene: BABYLON.Scene;
     private gui: Gui;
+    private fx: FX;
 
     private lights: Lights;
     private cameras: Cameras;
@@ -49,6 +51,7 @@ export class Game {
 
         this.lights = new Lights(this._scene); //Lights
         this.cameras = new Cameras(this._scene, this._canvas); // Cameras
+        this.fx = new FX(this._scene, this.cameras.mainCamera); // FX
 
         // Ground
         this.velvetMat = new Velvet(this.groundTile, this._scene);
@@ -68,15 +71,13 @@ export class Game {
             this.sicbo.setMaterial("goldFrame", new Gold(this.pathImageHdr + this.hdrImage, this._scene).material);
             this.sicbo.setMaterial("glass", new Glass(this.pathImageHdr + this.hdrImage, this._scene, false).material);
 
-            this.sicbo.setMaterial("goldDicesFrame", new Gold(this.pathImageHdr + this.hdrImage, this._scene).material);
-            this.sicbo.setMaterial("goldMenuFrame", new Gold(this.pathImageHdr + this.hdrImage, this._scene).material);
-            this.sicbo.setMaterial("glasses", new Glass(this.pathImageHdr + this.hdrImageBlur, this._scene, true).material);
-            console.log(this.sicbo.getMesh("goldDicesFrame"));
-            console.log(this.sicbo.getMesh("goldMenuFrame"));
-            console.log(this.sicbo.getMesh("glasses"));
+            this.sicbo.setMaterial("menuPanelGold", new Gold(this.pathImageHdr + this.hdrImageBlur, this._scene).material);
+            this.sicbo.setMaterial("copperBorder", new Copper(this.pathImageHdr + this.hdrImage, this._scene).material);
+            this.sicbo.setMaterial("copperCircle", new Copper(this.pathImageHdr + this.hdrImage, this._scene).material);
+            this.fx.excludeGeometry(<BABYLON.Mesh>this.sicbo.getMesh("AO"));
+            // this.fx.excludeGeometry(<BABYLON.Mesh>this.sicbo.getMesh("menuPanelGold"));
         });
 
-        new FX(this._scene); // FX
         this.gui.game = this;
     }
 

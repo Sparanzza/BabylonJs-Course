@@ -6,8 +6,8 @@ export class Velvet {
     constructor(pathTexture: string, scene: BABYLON.Scene) {
         // Material
         this.material = new BABYLON.StandardMaterial("velvetMat", scene);
-        this.material.specularColor = new BABYLON.Color3(198 / 255, 13 / 255, 37 / 255);
-        this.material.diffuseColor = new BABYLON.Color3(198 / 255, 13 / 255, 37 / 255);
+        this.material.diffuseColor = new BABYLON.Color3(185 / 255, 2 / 255, 66 / 255);
+        this.material.specularColor = new BABYLON.Color3(252 / 255, 115 / 255, 180 / 255);
 
         // Texture
         this.texture = new BABYLON.Texture(pathTexture, scene);

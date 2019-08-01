@@ -15,7 +15,7 @@ export class Gold {
         this.material.alphaMode = BABYLON.Engine.ALPHA_ADD;
 
         this.material.ambientColor = new BABYLON.Color3(198 / 255, 130 / 255, 10 / 255);
-        this.material.emissiveColor = new BABYLON.Color3(40 / 255, 50 / 255, 10 / 255);
+        this.material.emissiveColor = new BABYLON.Color3(60 / 255, 70 / 255, 30 / 255);
         BABYLON.StandardMaterial.FresnelEnabled = true;
     }
 }
