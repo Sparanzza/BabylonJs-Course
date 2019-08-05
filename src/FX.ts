@@ -23,6 +23,7 @@ export class FX {
         // this.postProcess.vignetteBlendMode = BABYLON.ImageProcessingConfiguration.VIGNETTEMODE_MULTIPLY;
     }
     setBloom(s: BABYLON.Scene, c: BABYLON.ArcRotateCamera) {
+        var postProcess = new BABYLON.FxaaPostProcess("fxaa", 1.0, c);
         var defaultPipeline = new BABYLON.DefaultRenderingPipeline("default", true, s, [c]);
         defaultPipeline.bloomEnabled = true;
         defaultPipeline.bloomWeight = 0.3;

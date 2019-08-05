@@ -64,17 +64,16 @@ export class Game {
             this.sicbo.animationGroups = c.animationGroups;
             this._scene.stopAllAnimations();
 
-            // Materials assigns
-            this.sicbo.getMesh("SELECT_FACE_1").setPivotPoint(new BABYLON.Vector3(0, 42, 0), BABYLON.Space.LOCAL);
-            this.sicbo.getMesh("SELECT_FACE_2").setPivotPoint(new BABYLON.Vector3(0, 42, 0), BABYLON.Space.LOCAL);
+            console.log(this.sicbo);
 
+            // Materials assigns
             this.sicbo.setMaterial("goldFrame", new Gold(this.pathImageHdr + this.hdrImage, this._scene).material);
             this.sicbo.setMaterial("glass", new Glass(this.pathImageHdr + this.hdrImage, this._scene, false).material);
 
             this.sicbo.setMaterial("menuPanelGold", new Gold(this.pathImageHdr + this.hdrImageBlur, this._scene).material);
             this.sicbo.setMaterial("copperBorder", new Copper(this.pathImageHdr + this.hdrImage, this._scene).material);
             this.sicbo.setMaterial("copperCircle", new Copper(this.pathImageHdr + this.hdrImage, this._scene).material);
-            this.fx.excludeGeometry(<BABYLON.Mesh>this.sicbo.getMesh("AO"));
+            // this.fx.excludeGeometry(<BABYLON.Mesh>this.sicbo.getMesh("AO"));
             // this.fx.excludeGeometry(<BABYLON.Mesh>this.sicbo.getMesh("menuPanelGold"));
         });
 
@@ -84,8 +83,9 @@ export class Game {
     startGame() {
         // TODO
     }
-    public playNewGame(n0: number, n1: number) {
-        this.sicbo.setDicesFacesResult(n0, n1);
+
+    public playNewGame(n0: number, n1: number, n2: number) {
+        this.sicbo.setDicesFacesResult(n0, n1, n2);
         this.sicbo.startAnimation("pushDices");
     }
 

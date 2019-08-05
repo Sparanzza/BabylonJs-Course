@@ -13,6 +13,7 @@ export class Gui {
             message: "Message",
             dice0: 1,
             dice1: 1,
+            dice2: 1,
             push: () => {
                 this.Push();
             }
@@ -22,6 +23,7 @@ export class Gui {
         this.gui.add(this.obj, "message");
         this.gui.add(this.obj, "dice0");
         this.gui.add(this.obj, "dice1");
+        this.gui.add(this.obj, "dice2");
         this.gui.add(this.obj, "push");
     }
 
@@ -29,7 +31,7 @@ export class Gui {
         let nums = (<any>this.gui.__controllers[0]).object;
         // this._sicbo.setDicesFacesResult(nums.dice0, nums.dice1);
         // this._sicbo.startAnimation("pushDices");
-        console.log("push!");
-        this.game.playNewGame(nums.dice0, nums.dice1);
+        console.log(nums);
+        this.game.playNewGame(nums.dice0, nums.dice1, nums.dice2);
     }
 }

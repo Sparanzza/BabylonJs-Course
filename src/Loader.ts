@@ -29,13 +29,13 @@ export class Loader {
             });
 
         targetProperty.animation._keys[indexKey].value = key;
-        console.log(targetProperty);
+        console.log(targetProperty.animation._keys[indexKey].value);
     }
 
     public startAnimation(name: string) {
         // console.log(this.animationGroups.filter(a => a.name == name)[0]);
         (<any>this.animationGroups.find((e: any) => e.name == name)).play();
-        console.log(this.animationGroups.find((e: any) => e.name == name));
+        // console.log(this.animationGroups.find((e: any) => e.name == name));
     }
 
     public getMesh(name: string): BABYLON.AbstractMesh {

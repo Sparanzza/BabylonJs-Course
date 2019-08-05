@@ -19,6 +19,7 @@
     "homepage": "https://github.com/Sparanzza/Course-Babylon-github#readme",
     "dependencies": {
         "@types/dat.gui": "^0.7.2",
+        "@types/stats": "^0.16.30",
         "babylonjs": "^4.0.3",
         "babylonjs-gui": "^4.0.3",
         "babylonjs-loaders": "^4.0.3",
@@ -26,6 +27,7 @@
         "dat.gui": "^0.7.6",
         "install": "^0.13.0",
         "npm": "^6.10.1",
+        "stats.js": "^0.17.0",
         "tslint": "^5.18.0"
     },
     "devDependencies": {
