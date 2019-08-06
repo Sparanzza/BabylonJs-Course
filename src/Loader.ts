@@ -29,7 +29,7 @@ export class Loader {
             });
 
         targetProperty.animation._keys[indexKey].value = key;
-        console.log(targetProperty.animation._keys[indexKey].value);
+        // console.log(targetProperty.animation._keys[indexKey].value);
     }
 
     public startAnimation(name: string) {
@@ -40,5 +40,11 @@ export class Loader {
 
     public getMesh(name: string): BABYLON.AbstractMesh {
         return <BABYLON.AbstractMesh>this.meshes.find((e: any) => e.name == name);
+    }
+
+    public setRatioGroupAnimation(ratio: Number, animationGroupName: string) {
+        let animationGroup = <any>this.animationGroups.find((e: any) => e.name == animationGroupName);
+        console.log(animationGroup);
+        animationGroup._speedRatio = ratio;
     }
 }

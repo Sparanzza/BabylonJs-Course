@@ -17,15 +17,6 @@ export class Cameras {
         this.mainCamera.fov = 0.785398;
         this.mainCamera.attachControl(canvas, false, false);
         this.mainCamera.viewport = new BABYLON.Viewport(0, 0, 1, 1);
-
-        this.animateCameraPositionAndRotation(
-            this.mainCamera,
-            this.initPosMainCamera,
-            this.inGamePosMainCamera,
-            this.initTgtMainCamera,
-            this.inGameTgtMainCamera,
-            scene
-        );
     }
 
     animateCameraPositionAndRotation(
@@ -40,7 +31,7 @@ export class Cameras {
         var animCamPosition = new BABYLON.Animation(
             "animCam",
             "position",
-            30,
+            60,
             BABYLON.Animation.ANIMATIONTYPE_VECTOR3,
             BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
         );
@@ -51,7 +42,7 @@ export class Cameras {
             value: fromPos
         });
         keysPosition.push({
-            frame: 100,
+            frame: 300,
             value: toPos
         });
 
@@ -60,25 +51,32 @@ export class Cameras {
         var animCamTgt = new BABYLON.Animation(
             "animTgt",
             "lockedTarget",
-            30,
+            60,
             BABYLON.Animation.ANIMATIONTYPE_VECTOR3,
             BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
         );
 
-        var keysRotation = [];
-        keysRotation.push({
+        var keysTgt = [];
+        keysTgt.push({
             frame: 0,
             value: fromTgt
         });
-        keysRotation.push({
-            frame: 100,
+        keysTgt.push({
+            frame: 300,
             value: toTgt
         });
 
-        animCamTgt.setKeys(keysRotation);
+        animCamTgt.setKeys(keysTgt);
+        // ease animation
+        let easingFunction = new BABYLON.CircleEase();
+        easingFunction.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
+        animCamPosition.setEasingFunction(easingFunction);
+        animCamTgt.setEasingFunction(easingFunction);
+
         c.animations.push(animCamPosition);
         c.animations.push(animCamTgt);
-
-        scene.beginAnimation(c, 0, 100, true);
+        scene.beginAnimation(c, 0, 300, false, 1, () => {
+            console.log("finished animation Camera");
+        });
     }
 }

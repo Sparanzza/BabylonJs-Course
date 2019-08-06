@@ -26,7 +26,7 @@ export class FX {
         var postProcess = new BABYLON.FxaaPostProcess("fxaa", 1.0, c);
         var defaultPipeline = new BABYLON.DefaultRenderingPipeline("default", true, s, [c]);
         defaultPipeline.bloomEnabled = true;
-        defaultPipeline.bloomWeight = 0.3;
+        defaultPipeline.bloomWeight = 0.5;
         defaultPipeline.bloomKernel = 8;
     }
 

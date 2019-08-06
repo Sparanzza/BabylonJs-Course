@@ -12,7 +12,6 @@ import { Velvet } from "./Materials/Velvet";
 
 //Meshes
 import { Ground } from "./Models/Ground";
-import { Loader } from "./Loader";
 import { SicBo } from "./Models/SicBo";
 
 import { FX } from "./FX";
@@ -58,13 +57,11 @@ export class Game {
         this.ground = new Ground(3200, 3200, this._scene); //Ground
         this.ground.setMaterial(this.velvetMat.material);
 
-        this.sicbo = new SicBo(this.pathModels, this.sicBoFileName); // Loaders
+        this.sicbo = new SicBo(this.pathModels, this.sicBoFileName, this._scene); // Loaders
         this.sicbo.load(this._scene).then((c: any) => {
             this.sicbo.meshes = c.meshes;
             this.sicbo.animationGroups = c.animationGroups;
             this._scene.stopAllAnimations();
-
-            console.log(this.sicbo);
 
             // Materials assigns
             this.sicbo.setMaterial("goldFrame", new Gold(this.pathImageHdr + this.hdrImage, this._scene).material);
@@ -73,8 +70,8 @@ export class Game {
             this.sicbo.setMaterial("menuPanelGold", new Gold(this.pathImageHdr + this.hdrImageBlur, this._scene).material);
             this.sicbo.setMaterial("copperBorder", new Copper(this.pathImageHdr + this.hdrImage, this._scene).material);
             this.sicbo.setMaterial("copperCircle", new Copper(this.pathImageHdr + this.hdrImage, this._scene).material);
-            // this.fx.excludeGeometry(<BABYLON.Mesh>this.sicbo.getMesh("AO"));
-            // this.fx.excludeGeometry(<BABYLON.Mesh>this.sicbo.getMesh("menuPanelGold"));
+            this.sicbo.setRatioGroupAnimation(1.5, "pushDices");
+            this.sicbo.setFlare(this._scene);
         });
 
         this.gui.game = this;
@@ -84,10 +81,21 @@ export class Game {
         // TODO
     }
 
-    public playNewGame(n0: number, n1: number, n2: number) {
+    public startInGame(n0: number, n1: number, n2: number) {
         this.sicbo.setDicesFacesResult(n0, n1, n2);
         this.sicbo.startAnimation("pushDices");
+
+        this.cameras.animateCameraPositionAndRotation(
+            this.cameras.mainCamera,
+            new BABYLON.Vector3(0, 1750, 950),
+            new BABYLON.Vector3(0, 1200, 600),
+            new BABYLON.Vector3(0, 0, 350),
+            new BABYLON.Vector3(0, 0, 100),
+            this._scene
+        );
     }
+
+    public initGame() {}
 
     doRender(): void {
         this._engine.runRenderLoop(() => {

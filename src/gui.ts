@@ -14,8 +14,11 @@ export class Gui {
             dice0: 1,
             dice1: 1,
             dice2: 1,
-            push: () => {
-                this.Push();
+            startInGame: () => {
+                this.startInGame();
+            },
+            initGame: () => {
+                this.initGame();
             }
         };
 
@@ -24,14 +27,13 @@ export class Gui {
         this.gui.add(this.obj, "dice0");
         this.gui.add(this.obj, "dice1");
         this.gui.add(this.obj, "dice2");
-        this.gui.add(this.obj, "push");
+        this.gui.add(this.obj, "startInGame");
+        this.gui.add(this.obj, "initGame");
     }
 
-    Push() {
+    startInGame() {
         let nums = (<any>this.gui.__controllers[0]).object;
-        // this._sicbo.setDicesFacesResult(nums.dice0, nums.dice1);
-        // this._sicbo.startAnimation("pushDices");
-        console.log(nums);
-        this.game.playNewGame(nums.dice0, nums.dice1, nums.dice2);
+        this.game.startInGame(nums.dice0, nums.dice1, nums.dice2);
     }
+    initGame() {}
 }
