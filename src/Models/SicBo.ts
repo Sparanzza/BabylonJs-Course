@@ -1,6 +1,5 @@
 import { Loader } from "../Loader";
 import * as BABYLON from "babylonjs";
-import { Flare } from "../Materials/Flare";
 
 export class SicBo extends Loader {
     public dices: BABYLON.Mesh;
@@ -11,7 +10,6 @@ export class SicBo extends Loader {
     };
     public dicesCenterXYZ: BABYLON.Vector3;
     public sector1: BABYLON.PolygonMeshBuilder;
-    public flareMat: Flare;
 
     constructor(public path: string, public file: string, scene: BABYLON.Scene) {
         super(path, file);
@@ -57,7 +55,7 @@ export class SicBo extends Loader {
                 v3 = new BABYLON.Vector3(0, 0, 0);
                 break;
         }
-        return BABYLON.Quaternion.FromEulerAngles(v3.x, BABYLON.Scalar.RandomRange(0, Math.PI), v3.z);
+        return BABYLON.Quaternion.FromEulerAngles(v3.x, BABYLON.Scalar.RandomRange(0, 2 * Math.PI), v3.z);
     }
 
     // https://doc.babylonjs.com/snippets/innermeshpoints
@@ -173,15 +171,5 @@ export class SicBo extends Loader {
         console.log("points");
         console.log(points);
         return points;
-    }
-
-    setFlare(scene: BABYLON.Scene) {
-        this.flareMat = new Flare("./images/flare.png", scene);
-        for (let i = 0; i < 16; i++) {
-            let m = <BABYLON.Mesh>this.getMesh("flare_" + i);
-            m.material = this.flareMat.material;
-            m.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL;
-            m.renderingGroupId = 1;
-        }
     }
 }

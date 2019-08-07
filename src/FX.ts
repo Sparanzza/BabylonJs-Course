@@ -8,10 +8,9 @@ export class FX {
         //     blurKernelSize: 64,
         //     mainTextureSamples: 6
         // });
-        // this.glow.intensity = 0;
-
-        this.setBloom(scene, camera);
-        //this.setVignette(camera);
+        // this.glow.intensity = 0.5;
+        // this.setBloom(scene, camera);
+        // this.setVignette(camera);
     }
 
     setVignette(c: BABYLON.ArcRotateCamera) {

@@ -35,5 +35,7 @@ export class Gui {
         let nums = (<any>this.gui.__controllers[0]).object;
         this.game.startInGame(nums.dice0, nums.dice1, nums.dice2);
     }
-    initGame() {}
+    initGame() {
+        this.game.initGame();
+    }
 }

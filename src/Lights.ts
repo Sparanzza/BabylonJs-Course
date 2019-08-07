@@ -15,6 +15,8 @@ export class Lights {
         this.light.intensity = 0.5;
         this.spotLightL.intensity = 3;
         this.spotLightR.intensity = 3;
+
+        this.light.shadowEnabled = true;
     }
 
     public setSpotlightLIntensity(i: number) {

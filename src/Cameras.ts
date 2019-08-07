@@ -3,10 +3,8 @@ import { ImageProcessingPostProcess } from "babylonjs";
 
 export class Cameras {
     public mainCamera: BABYLON.ArcRotateCamera;
-    public initPosMainCamera = new BABYLON.Vector3(0, 1750, 950);
+    public initPosMainCamera = new BABYLON.Vector3(0, 1750, 1000);
     public initTgtMainCamera = new BABYLON.Vector3(0, 0, 350);
-    public inGamePosMainCamera = new BABYLON.Vector3(0, 1, 800);
-    public inGameTgtMainCamera = new BABYLON.Vector3(0, 0, 0);
 
     public fixCameraFX: BABYLON.ArcRotateCamera;
     public animationMainCamera: BABYLON.Animation;
@@ -19,7 +17,7 @@ export class Cameras {
         this.mainCamera.viewport = new BABYLON.Viewport(0, 0, 1, 1);
     }
 
-    animateCameraPositionAndRotation(
+    animateCameraPosAndRot(
         c: BABYLON.Camera,
         fromPos: BABYLON.Vector3,
         toPos: BABYLON.Vector3,
@@ -48,13 +46,7 @@ export class Cameras {
 
         animCamPosition.setKeys(keysPosition);
 
-        var animCamTgt = new BABYLON.Animation(
-            "animTgt",
-            "lockedTarget",
-            60,
-            BABYLON.Animation.ANIMATIONTYPE_VECTOR3,
-            BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
-        );
+        var animCamTgt = new BABYLON.Animation("animTgt", "target", 60, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
 
         var keysTgt = [];
         keysTgt.push({
@@ -77,6 +69,8 @@ export class Cameras {
         c.animations.push(animCamTgt);
         scene.beginAnimation(c, 0, 300, false, 1, () => {
             console.log("finished animation Camera");
+            console.log(this.mainCamera.position);
+            console.log(this.mainCamera.target);
         });
     }
 }

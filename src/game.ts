@@ -13,16 +13,19 @@ import { Velvet } from "./Materials/Velvet";
 //Meshes
 import { Ground } from "./Models/Ground";
 import { SicBo } from "./Models/SicBo";
+import { Flares } from "./Models/Flares";
 
 import { FX } from "./FX";
 
 export class Game {
+    private pathModels = "./models/";
     private pathImageHdr = "images/hdr/";
     private hdrImage = "hdr_1.jpg";
     private hdrImageBlur = "hdr_1_Blur.jpg";
-    private pathModels = "./models/";
     private groundTile = "images/groundtile.jpg";
+    private flareTexture = "./images/flare.png";
     private sicBoFileName = "sicBo.gltf";
+    private flareFileName = "flare.gltf";
 
     private _canvas: HTMLCanvasElement;
     private _engine: BABYLON.Engine;
@@ -33,6 +36,7 @@ export class Game {
     private lights: Lights;
     private cameras: Cameras;
     private sicbo: SicBo;
+    private flares: Flares;
     private ground: Ground;
     private velvetMat: Velvet;
 
@@ -54,7 +58,7 @@ export class Game {
 
         // Ground
         this.velvetMat = new Velvet(this.groundTile, this._scene);
-        this.ground = new Ground(3200, 3200, this._scene); //Ground
+        this.ground = new Ground(3300, 3000, this._scene); //Ground
         this.ground.setMaterial(this.velvetMat.material);
 
         this.sicbo = new SicBo(this.pathModels, this.sicBoFileName, this._scene); // Loaders
@@ -71,7 +75,17 @@ export class Game {
             this.sicbo.setMaterial("copperBorder", new Copper(this.pathImageHdr + this.hdrImage, this._scene).material);
             this.sicbo.setMaterial("copperCircle", new Copper(this.pathImageHdr + this.hdrImage, this._scene).material);
             this.sicbo.setRatioGroupAnimation(1.5, "pushDices");
-            this.sicbo.setFlare(this._scene);
+            this.sicbo.getMesh("pusher").receiveShadows = true;
+            console.log("-- LOADED SICBO --");
+        });
+
+        this.flares = new Flares(this.pathModels, this.flareFileName, this._scene, this.flareTexture); // Loaders
+        this.flares.load(this._scene).then((c: any) => {
+            this.flares.meshes = c.meshes;
+            console.log(this.flares.meshes);
+            this.flares.animationGroups = c.animationGroups;
+            this.flares.setFlare(this.flareTexture, this._scene);
+            console.log("-- LOADED FLARES --");
         });
 
         this.gui.game = this;
@@ -82,20 +96,28 @@ export class Game {
     }
 
     public startInGame(n0: number, n1: number, n2: number) {
-        this.sicbo.setDicesFacesResult(n0, n1, n2);
-        this.sicbo.startAnimation("pushDices");
-
-        this.cameras.animateCameraPositionAndRotation(
+        this.cameras.animateCameraPosAndRot(
             this.cameras.mainCamera,
-            new BABYLON.Vector3(0, 1750, 950),
-            new BABYLON.Vector3(0, 1200, 600),
+            new BABYLON.Vector3(0, 1750, 1000),
+            new BABYLON.Vector3(0, 1200, 650),
             new BABYLON.Vector3(0, 0, 350),
             new BABYLON.Vector3(0, 0, 100),
             this._scene
         );
+        this.sicbo.setDicesFacesResult(n0, n1, n2);
+        this.sicbo.startAnimation("pushDices");
     }
 
-    public initGame() {}
+    public initGame() {
+        this.cameras.animateCameraPosAndRot(
+            this.cameras.mainCamera,
+            new BABYLON.Vector3(0, 1200, 650),
+            new BABYLON.Vector3(0, 1750, 1000),
+            new BABYLON.Vector3(0, 0, 100),
+            new BABYLON.Vector3(0, 0, 350),
+            this._scene
+        );
+    }
 
     doRender(): void {
         this._engine.runRenderLoop(() => {
