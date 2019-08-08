@@ -27,6 +27,7 @@ export class Game {
     private sicBoFileName = "sicBo.gltf";
     private flareFileName = "flare.gltf";
     private countdownFileName = "countdown.gltf";
+    private oddsLabelsFilename = "labels.gltf";
 
     private _canvas: HTMLCanvasElement;
     private _engine: BABYLON.Engine;
@@ -120,9 +121,9 @@ export class Game {
             this.sicbo.startAnimation("pushDices");
             this.cameras.animateCameraPosAndRot(
                 this.cameras.mainCamera,
-                new BABYLON.Vector3(0, 1750, 1000),
+                new BABYLON.Vector3(0, 1900, 300),
                 new BABYLON.Vector3(0, 1200, 650),
-                new BABYLON.Vector3(0, 0, 350),
+                new BABYLON.Vector3(0, 0, 300),
                 new BABYLON.Vector3(0, 0, 100),
                 this._scene
             );
@@ -133,9 +134,9 @@ export class Game {
         this.cameras.animateCameraPosAndRot(
             this.cameras.mainCamera,
             new BABYLON.Vector3(0, 1200, 650),
-            new BABYLON.Vector3(0, 1750, 1000),
+            new BABYLON.Vector3(0, 1900, 300),
             new BABYLON.Vector3(0, 0, 100),
-            new BABYLON.Vector3(0, 0, 350),
+            new BABYLON.Vector3(0, 0, 300),
             this._scene
         );
     }

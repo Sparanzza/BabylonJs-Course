@@ -3,8 +3,8 @@ import { ImageProcessingPostProcess } from "babylonjs";
 
 export class Cameras {
     public mainCamera: BABYLON.ArcRotateCamera;
-    public initPosMainCamera = new BABYLON.Vector3(0, 1750, 1000);
-    public initTgtMainCamera = new BABYLON.Vector3(0, 0, 350);
+    public initPosMainCamera = new BABYLON.Vector3(0, 1900, 300);
+    public initTgtMainCamera = new BABYLON.Vector3(0, 0, 300);
 
     public fixCameraFX: BABYLON.ArcRotateCamera;
     public animationMainCamera: BABYLON.Animation;
