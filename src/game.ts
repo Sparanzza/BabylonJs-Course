@@ -6,7 +6,6 @@ import { Cameras } from "./Cameras";
 import { Glass } from "./Materials/Glass";
 import { Gold } from "./Materials/Gold";
 import { Copper } from "./Materials/Copper";
-import { SceneLoader, AnimationGroup } from "babylonjs";
 //Material
 import { Velvet } from "./Materials/Velvet";
 
@@ -14,6 +13,7 @@ import { Velvet } from "./Materials/Velvet";
 import { Ground } from "./Models/Ground";
 import { SicBo } from "./Models/SicBo";
 import { Flares } from "./Models/Flares";
+import { Countdown } from "./Models/Countdown";
 
 import { FX } from "./FX";
 
@@ -26,6 +26,7 @@ export class Game {
     private flareTexture = "./images/flare.png";
     private sicBoFileName = "sicBo.gltf";
     private flareFileName = "flare.gltf";
+    private countdownFileName = "countdown.gltf";
 
     private _canvas: HTMLCanvasElement;
     private _engine: BABYLON.Engine;
@@ -37,6 +38,7 @@ export class Game {
     private cameras: Cameras;
     private sicbo: SicBo;
     private flares: Flares;
+    private countdown: Countdown;
     private ground: Ground;
     private velvetMat: Velvet;
 
@@ -63,10 +65,9 @@ export class Game {
 
         this.sicbo = new SicBo(this.pathModels, this.sicBoFileName, this._scene); // Loaders
         this.sicbo.load(this._scene).then((c: any) => {
+            this._scene.stopAllAnimations();
             this.sicbo.meshes = c.meshes;
             this.sicbo.animationGroups = c.animationGroups;
-            this._scene.stopAllAnimations();
-
             // Materials assigns
             this.sicbo.setMaterial("goldFrame", new Gold(this.pathImageHdr + this.hdrImage, this._scene).material);
             this.sicbo.setMaterial("glass", new Glass(this.pathImageHdr + this.hdrImage, this._scene, false).material);
@@ -81,11 +82,28 @@ export class Game {
 
         this.flares = new Flares(this.pathModels, this.flareFileName, this._scene, this.flareTexture); // Loaders
         this.flares.load(this._scene).then((c: any) => {
+            this._scene.stopAllAnimations();
             this.flares.meshes = c.meshes;
             console.log(this.flares.meshes);
             this.flares.animationGroups = c.animationGroups;
-            this.flares.setFlare(this.flareTexture, this._scene);
+            this.flares.setFlare(this.flareTexture, "flare_", this._scene);
             console.log("-- LOADED FLARES --");
+        });
+
+        this.countdown = new Countdown(this.pathModels, this.countdownFileName, this._scene); // Loaders
+        this.countdown.load(this._scene).then((c: any) => {
+            this._scene.stopAllAnimations();
+            this.countdown.meshes = c.meshes;
+            this.countdown.meshes.forEach(e => {
+                e.renderingGroupId = 2;
+            });
+            this.countdown.animationGroups = c.animationGroups;
+            for (let index = 1; index < 4; index++) {
+                this.countdown.setMaterial("count_outliner_num_" + index, new Gold(this.pathImageHdr + this.hdrImage, this._scene).material);
+            }
+            this.countdown.setFlare(this.flareTexture, "sparkle_num_", this._scene);
+            this.countdown.setFlare(this.flareTexture, "flare_num_", this._scene);
+            console.log("-- LOADED COUNTDOWN --");
         });
 
         this.gui.game = this;
@@ -96,16 +114,19 @@ export class Game {
     }
 
     public startInGame(n0: number, n1: number, n2: number) {
-        this.cameras.animateCameraPosAndRot(
-            this.cameras.mainCamera,
-            new BABYLON.Vector3(0, 1750, 1000),
-            new BABYLON.Vector3(0, 1200, 650),
-            new BABYLON.Vector3(0, 0, 350),
-            new BABYLON.Vector3(0, 0, 100),
-            this._scene
-        );
         this.sicbo.setDicesFacesResult(n0, n1, n2);
-        this.sicbo.startAnimation("pushDices");
+
+        this.countdown.startAnimation("countdown").addOnce(() => {
+            this.sicbo.startAnimation("pushDices");
+            this.cameras.animateCameraPosAndRot(
+                this.cameras.mainCamera,
+                new BABYLON.Vector3(0, 1750, 1000),
+                new BABYLON.Vector3(0, 1200, 650),
+                new BABYLON.Vector3(0, 0, 350),
+                new BABYLON.Vector3(0, 0, 100),
+                this._scene
+            );
+        });
     }
 
     public initGame() {

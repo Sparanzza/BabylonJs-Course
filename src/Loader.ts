@@ -1,6 +1,6 @@
 import * as BABYLON from "babylonjs";
 import "babylonjs-loaders";
-import { SceneLoader } from "babylonjs";
+import { SceneLoader, Observable, AnimationGroup } from "babylonjs";
 
 export class Loader {
     public meshes: BABYLON.AbstractMesh[];
@@ -19,7 +19,6 @@ export class Loader {
 
     public setKeyframe(animationGroupName: string, targetPropertyName: string, targetName: string, key: any, indexKey: number) {
         let animationGroup = <any>this.animationGroups.find((e: any) => e.name == animationGroupName);
-        // console.log(animationGroup);
         let targetProperty = animationGroup.targetedAnimations
             .filter((e: any) => {
                 return e.animation.targetProperty == targetPropertyName;
@@ -32,10 +31,13 @@ export class Loader {
         // console.log(targetProperty.animation._keys[indexKey].value);
     }
 
-    public startAnimation(name: string) {
-        // console.log(this.animationGroups.filter(a => a.name == name)[0]);
-        (<any>this.animationGroups.find((e: any) => e.name == name)).play();
-        // console.log(this.animationGroups.find((e: any) => e.name == name));
+    public startAnimation(name: string): BABYLON.Observable<BABYLON.TargetedAnimation> {
+        let anim = <BABYLON.AnimationGroup>this.animationGroups.find((e: any) => e.name == name);
+        // anim.onAnimationEndObservable.addOnce(() => {
+        //     console.log("animation " + name + " is ended");
+        // });
+        anim.play();
+        return anim.onAnimationEndObservable;
     }
 
     public getMesh(name: string): BABYLON.AbstractMesh {
