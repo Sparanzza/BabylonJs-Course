@@ -6,7 +6,7 @@ export class Cameras {
     public initPosMainCamera = new BABYLON.Vector3(0, 1900, 300);
     public initTgtMainCamera = new BABYLON.Vector3(0, 0, 300);
 
-    public fixCameraFX: BABYLON.ArcRotateCamera;
+    // public fixCameraFX: BABYLON.ArcRotateCamera;
     public animationMainCamera: BABYLON.Animation;
 
     constructor(scene: BABYLON.Scene, canvas: any) {

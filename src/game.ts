@@ -43,26 +43,39 @@ export class Game {
     private ground: Ground;
     private velvetMat: Velvet;
 
+    private gold: Gold;
+    private goldBlur: Gold;
+    private copper: Copper;
+    private glass: Glass;
+
     private gui: Gui;
     private stats: stats;
 
     constructor(canvasElement: string) {
+        // Stats
         this.stats = new stats();
-        this.stats.showPanel(0);
+        this.stats.showPanel(2);
         this.stats.dom.style.position = "absolute";
         this.stats.dom.style.bottom = "0px";
         document.body.appendChild(this.stats.dom);
 
+        // Context
         this._canvas = document.getElementById(canvasElement) as HTMLCanvasElement;
         this._engine = new BABYLON.Engine(this._canvas, true);
         this._scene = new BABYLON.Scene(this._engine);
         this._scene.clearColor = new BABYLON.Color4(0.3, 0.3, 0.3, 1);
         this._scene.ambientColor = new BABYLON.Color3(0.65, 0.65, 0.65);
+
+        // materials
+        this.gold = new Gold(this.pathImageHdr + this.hdrImage, this._scene);
+        this.goldBlur = new Gold(this.pathImageHdr + this.hdrImageBlur, this._scene);
+        this.copper = new Copper(this.pathImageHdr + this.hdrImage, this._scene);
+        this.glass = new Glass(this.pathImageHdr + this.hdrImage, this._scene, false);
     }
 
     createScene(): void {
         this.gui = new Gui(); //dat.Gui
-        new HelperViewport(100, this._scene); //Helper Axis
+        // new HelperViewport(100, this._scene); //Helper Axis
 
         this.lights = new Lights(this._scene); //Lights
         this.cameras = new Cameras(this._scene, this._canvas); // Cameras
@@ -79,12 +92,12 @@ export class Game {
             this.sicbo.meshes = c.meshes;
             this.sicbo.animationGroups = c.animationGroups;
             // Materials assigns
-            this.sicbo.setMaterial("goldFrame", new Gold(this.pathImageHdr + this.hdrImage, this._scene).material);
-            this.sicbo.setMaterial("glass", new Glass(this.pathImageHdr + this.hdrImage, this._scene, false).material);
+            this.sicbo.setMaterial("goldFrame", this.gold);
+            this.sicbo.setMaterial("glass", this.glass);
 
-            this.sicbo.setMaterial("menuPanelGold", new Gold(this.pathImageHdr + this.hdrImageBlur, this._scene).material);
-            this.sicbo.setMaterial("copperBorder", new Copper(this.pathImageHdr + this.hdrImage, this._scene).material);
-            this.sicbo.setMaterial("copperCircle", new Copper(this.pathImageHdr + this.hdrImage, this._scene).material);
+            this.sicbo.setMaterial("menuPanelGold", this.goldBlur);
+            this.sicbo.setMaterial("copperBorder", this.copper);
+            this.sicbo.setMaterial("copperCircle", this.copper);
             this.sicbo.setRatioGroupAnimation(1.5, "pushDices");
             this.sicbo.getMesh("pusher").receiveShadows = true;
             console.log("-- LOADED SICBO --");
@@ -109,7 +122,7 @@ export class Game {
             });
             this.countdown.animationGroups = c.animationGroups;
             for (let index = 1; index < 4; index++) {
-                this.countdown.setMaterial("count_outliner_num_" + index, new Gold(this.pathImageHdr + this.hdrImage, this._scene).material);
+                this.countdown.setMaterial("count_outliner_num_" + index, this.gold);
             }
             this.countdown.setFlare(this.flareTexture, "sparkle_num_", this._scene);
             this.countdown.setFlare(this.flareTexture, "flare_num_", this._scene);

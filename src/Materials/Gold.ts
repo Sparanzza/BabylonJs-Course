@@ -1,21 +1,20 @@
 import * as BABYLON from "babylonjs";
-export class Gold {
-    public material: BABYLON.StandardMaterial;
+export class Gold extends BABYLON.StandardMaterial {
     public texture: BABYLON.Texture;
     constructor(pathTexture: string, scene: BABYLON.Scene) {
-        this.material = new BABYLON.StandardMaterial("gold", scene);
+        super("gold", scene);
         this.texture = new BABYLON.Texture(pathTexture, scene);
 
-        this.material.reflectionTexture = this.texture;
-        this.material.reflectionTexture.coordinatesMode = BABYLON.Texture.SPHERICAL_MODE;
-        this.material.reflectionTexture.level = 0.6;
+        this.reflectionTexture = this.texture;
+        this.reflectionTexture.coordinatesMode = BABYLON.Texture.SPHERICAL_MODE;
+        this.reflectionTexture.level = 0.6;
 
-        this.material.diffuseColor = new BABYLON.Color3(198 / 255, 130 / 255, 10 / 255);
-        this.material.specularPower = 10;
-        this.material.alphaMode = BABYLON.Engine.ALPHA_ADD;
+        this.diffuseColor = new BABYLON.Color3(198 / 255, 130 / 255, 10 / 255);
+        this.specularPower = 10;
+        this.alphaMode = BABYLON.Engine.ALPHA_ADD;
 
-        this.material.ambientColor = new BABYLON.Color3(198 / 255, 130 / 255, 10 / 255);
-        this.material.emissiveColor = new BABYLON.Color3(60 / 255, 70 / 255, 30 / 255);
+        this.ambientColor = new BABYLON.Color3(198 / 255, 130 / 255, 10 / 255);
+        this.emissiveColor = new BABYLON.Color3(60 / 255, 70 / 255, 30 / 255);
         BABYLON.StandardMaterial.FresnelEnabled = true;
     }
 }
