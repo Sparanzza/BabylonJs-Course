@@ -16,6 +16,7 @@ import { Flares } from "./Models/Flares";
 import { Countdown } from "./Models/Countdown";
 
 import { FX } from "./FX";
+import stats from "stats.js";
 
 export class Game {
     private pathModels = "./models/";
@@ -32,7 +33,6 @@ export class Game {
     private _canvas: HTMLCanvasElement;
     private _engine: BABYLON.Engine;
     private _scene: BABYLON.Scene;
-    private gui: Gui;
     private fx: FX;
 
     private lights: Lights;
@@ -43,7 +43,16 @@ export class Game {
     private ground: Ground;
     private velvetMat: Velvet;
 
+    private gui: Gui;
+    private stats: stats;
+
     constructor(canvasElement: string) {
+        this.stats = new stats();
+        this.stats.showPanel(0);
+        this.stats.dom.style.position = "absolute";
+        this.stats.dom.style.bottom = "0px";
+        document.body.appendChild(this.stats.dom);
+
         this._canvas = document.getElementById(canvasElement) as HTMLCanvasElement;
         this._engine = new BABYLON.Engine(this._canvas, true);
         this._scene = new BABYLON.Scene(this._engine);
@@ -57,7 +66,7 @@ export class Game {
 
         this.lights = new Lights(this._scene); //Lights
         this.cameras = new Cameras(this._scene, this._canvas); // Cameras
-        this.fx = new FX(this._scene, this.cameras.mainCamera); // FX
+        // this.fx = new FX(this._scene, this.cameras.mainCamera); // FX
 
         // Ground
         this.velvetMat = new Velvet(this.groundTile, this._scene);
@@ -143,7 +152,9 @@ export class Game {
 
     doRender(): void {
         this._engine.runRenderLoop(() => {
+            this.stats.begin();
             this._scene.render();
+            this.stats.end();
         });
 
         // The canvas/window resize event handler.

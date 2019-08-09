@@ -5,4 +5,6 @@ export class Odds extends Loader {
     constructor(public path: string, public file: string, scene: BABYLON.Scene) {
         super(path, file);
     }
+
+    setLabels() {}
 }
